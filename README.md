@@ -31,10 +31,10 @@ To have collaborators on a specific project be auto-prompted to install these pl
         "source": "github",
         "repo": "AmyJeanes/gmod-claude-plugins"
       }
-    },
-    "enabledPlugins": {
-      "glua-lsp@gmod-claude-plugins": true
     }
+  },
+  "enabledPlugins": {
+    "glua-lsp@gmod-claude-plugins": true
   }
 }
 ```
