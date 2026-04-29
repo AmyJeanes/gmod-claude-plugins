@@ -1,0 +1,28 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "gmod-claude-plugins",
+  "description": "Claude Code plugins for Garry's Mod GLua development",
+  "owner": {
+    "name": "Amy Jeanes"
+  },
+  "plugins": [
+    {
+      "name": "glua-lsp",
+      "description": "GLua language server (glua_ls) for Garry's Mod projects — Claude gets diagnostics, hover, jump-to-def for .lua files",
+      "version": "0.1.0",
+      "author": {
+        "name": "Amy Jeanes"
+      },
+      "source": "./plugins/glua-lsp",
+      "category": "development",
+      "lspServers": {
+        "glua": {
+          "command": "glua_ls",
+          "extensionToLanguage": {
+            ".lua": "lua"
+          }
+        }
+      }
+    }
+  ]
+}
