@@ -27,15 +27,30 @@ If both succeed but diagnostics are still wrong: see **If it still doesn't work*
 
 ## Install the binary
 
-`glua_ls` is published as a Rust crate. Install with cargo (works on Windows, macOS, Linux):
+Install `glua_ls` from the latest [`Pollux12/gmod-glua-ls`](https://github.com/Pollux12/gmod-glua-ls) GitHub release, not Cargo. The crates.io packages can lag the release binaries.
 
-```bash
-cargo install glua_ls
+Windows PowerShell example:
+
+```powershell
+New-Item -ItemType Directory -Force .tools/glua-ls
+$url = gh api repos/Pollux12/gmod-glua-ls/releases/latest `
+    --jq '.assets[] | select(.name == "glua_ls-win32-x64.zip") | .browser_download_url'
+Invoke-WebRequest -Uri $url -OutFile .tools/glua_ls.zip
+Expand-Archive -Path .tools/glua_ls.zip -DestinationPath .tools/glua-ls -Force
 ```
 
-If cargo isn't installed, get the Rust toolchain from <https://rustup.rs>.
+Linux example:
 
-The binary lands at `~/.cargo/bin/glua_ls` (or `%USERPROFILE%\.cargo\bin\glua_ls.exe` on Windows). Confirm `~/.cargo/bin` is on `PATH`:
+```bash
+mkdir -p .tools/glua-ls
+url=$(gh api repos/Pollux12/gmod-glua-ls/releases/latest \
+    --jq '.assets[] | select(.name == "glua_ls-linux-x64.tar.gz") | .browser_download_url')
+curl -sL -o .tools/glua_ls.tar.gz "$url"
+tar -xzf .tools/glua_ls.tar.gz -C .tools/glua-ls
+chmod +x .tools/glua-ls/glua_ls
+```
+
+Add `.tools/glua-ls` to the PATH used by Claude Code, or place the binary in another PATH directory. Confirm the binary Claude Code will see:
 
 ```bash
 glua_ls --version
@@ -69,12 +84,12 @@ Then trigger an edit to a `.lua` file. Diagnostics should appear automatically.
 
 ## If it still doesn't work
 
-- Open `/plugin` and check the **Errors** tab. If it still says `Executable not found in $PATH`, the shell Claude Code spawned doesn't have `~/.cargo/bin` on `PATH` — restart your terminal / Claude Code session.
+- Open `/plugin` and check the **Errors** tab. If it still says `Executable not found in $PATH`, the shell Claude Code spawned doesn't have the directory containing `glua_ls` on `PATH` — restart your terminal / Claude Code session after updating PATH.
 - Check that the project has a `.luarc.json`. `glua_ls` keys most of its analysis off it; without one, diagnostics will be sparse and globals will look undefined even when the stubs exist.
 - Confirm the stubs path in `.luarc.json` is correct. The path is relative to the project root; if the project layout is unusual (e.g. nested addon directories) the stubs may need to live somewhere else.
 
 ## Related
 
 - Upstream LSP: <https://github.com/Pollux12/gmod-glua-ls>
-- CLI sibling for one-shot linting: `cargo install glua_check`
+- CLI sibling for one-shot linting: download `glua_check-*` from the same GitHub release
 - Stub source: <https://github.com/luttje/glua-api-snippets>

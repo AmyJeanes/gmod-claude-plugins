@@ -6,7 +6,7 @@ A [Claude Code](https://docs.claude.com/en/docs/claude-code) plugin marketplace 
 
 | Plugin | Description | Required binary |
 | :----- | :---------- | :-------------- |
-| [`glua-lsp`](plugins/glua-lsp) | GLua language server (`glua_ls`) — diagnostics, hover, jump-to-definition for `.lua` files | `glua_ls` (`cargo install glua_ls`) |
+| [`glua-lsp`](plugins/glua-lsp) | GLua language server (`glua_ls`) — diagnostics, hover, jump-to-definition for `.lua` files | `glua_ls` from the latest `Pollux12/gmod-glua-ls` GitHub release |
 
 ## Install
 

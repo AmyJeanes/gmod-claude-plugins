@@ -11,13 +11,32 @@
 
 The plugin only ships configuration. You must install the `glua_ls` binary yourself.
 
-### Via Cargo (any platform)
+### Via GitHub Release
 
-```bash
-cargo install glua_ls
+Download `glua_ls` from the latest [`Pollux12/gmod-glua-ls`](https://github.com/Pollux12/gmod-glua-ls) GitHub release. Do not install it with Cargo; the crates.io package can lag behind the release binaries.
+
+Windows PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force .tools/glua-ls
+$url = gh api repos/Pollux12/gmod-glua-ls/releases/latest `
+    --jq '.assets[] | select(.name == "glua_ls-win32-x64.zip") | .browser_download_url'
+Invoke-WebRequest -Uri $url -OutFile .tools/glua_ls.zip
+Expand-Archive -Path .tools/glua_ls.zip -DestinationPath .tools/glua-ls -Force
 ```
 
-The binary lands at `~/.cargo/bin/glua_ls` (or `%USERPROFILE%\.cargo\bin\glua_ls.exe` on Windows). Make sure `~/.cargo/bin` is on your `PATH`.
+Linux:
+
+```bash
+mkdir -p .tools/glua-ls
+url=$(gh api repos/Pollux12/gmod-glua-ls/releases/latest \
+    --jq '.assets[] | select(.name == "glua_ls-linux-x64.tar.gz") | .browser_download_url')
+curl -sL -o .tools/glua_ls.tar.gz "$url"
+tar -xzf .tools/glua_ls.tar.gz -C .tools/glua-ls
+chmod +x .tools/glua-ls/glua_ls
+```
+
+Add `.tools/glua-ls` to the PATH used by Claude Code, or place the binary in another PATH directory.
 
 ### Verifying
 
@@ -52,4 +71,4 @@ unzip -q -o .tools/glua-api.zip -d .tools/glua-api/
 
 ## More information
 - [`glua_ls` on GitHub](https://github.com/Pollux12/gmod-glua-ls)
-- [`glua_check` CLI sibling](https://crates.io/crates/glua_check) — same engine as a one-shot linter
+- [`glua_check` CLI sibling](https://github.com/Pollux12/gmod-glua-ls/releases) — same engine as a one-shot linter
