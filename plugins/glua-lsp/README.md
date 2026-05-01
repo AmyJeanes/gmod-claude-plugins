@@ -7,48 +7,21 @@
 ## Supported Extensions
 `.lua`
 
-## Installation
+## How it works
 
-The plugin only ships configuration. You must install the `glua_ls` binary yourself.
+The plugin ships a small `bin/glua_ls.cmd` (Windows) and `bin/glua_ls` (Unix) shim and points its LSP `command` at `${CLAUDE_PLUGIN_ROOT}/bin/glua_ls.cmd`. When Claude Code launches the LSP, the shim walks up from the workspace CWD, finds the project's `.tools/bin/glua_ls(.exe)`, and execs it. Each project supplies its own pinned binary; the plugin doesn't install one globally.
 
-### Via GitHub Release
+## Project setup
 
-Download `glua_ls` from the latest [`Pollux12/gmod-glua-ls`](https://github.com/Pollux12/gmod-glua-ls) GitHub release. Do not install it with Cargo; the crates.io package can lag behind the release binaries.
+Your project needs three things in `.tools/`:
 
-Windows PowerShell:
+- `.tools/bin/glua_ls(.exe)` — the binary the shim execs.
+- `.tools/bin/glua_check(.exe)` *(optional)* — the CLI sibling, used by per-project lint scripts and CI.
+- `.tools/glua-api/` — type stubs from [`luttje/glua-api-snippets`](https://github.com/luttje/glua-api-snippets) (referenced by `.luarc.json` under `workspace.library`).
 
-```powershell
-New-Item -ItemType Directory -Force .tools/glua-ls
-$url = gh api repos/Pollux12/gmod-glua-ls/releases/latest `
-    --jq '.assets[] | select(.name == "glua_ls-win32-x64.zip") | .browser_download_url'
-Invoke-WebRequest -Uri $url -OutFile .tools/glua_ls.zip
-Expand-Archive -Path .tools/glua_ls.zip -DestinationPath .tools/glua-ls -Force
-```
+The `install-glua-ls` skill (auto-loaded with this plugin) describes a `scripts/install-tools.ps1` template that handles all three with pinned versions. If your project doesn't have one yet, ask Claude to set it up.
 
-Linux:
-
-```bash
-mkdir -p .tools/glua-ls
-url=$(gh api repos/Pollux12/gmod-glua-ls/releases/latest \
-    --jq '.assets[] | select(.name == "glua_ls-linux-x64.tar.gz") | .browser_download_url')
-curl -sL -o .tools/glua_ls.tar.gz "$url"
-tar -xzf .tools/glua_ls.tar.gz -C .tools/glua-ls
-chmod +x .tools/glua-ls/glua_ls
-```
-
-Add `.tools/glua-ls` to the PATH used by Claude Code, or place the binary in another PATH directory.
-
-### Verifying
-
-```bash
-glua_ls --version
-```
-
-If Claude Code can't find the binary you'll see `Executable not found in $PATH` in the `/plugin` Errors tab — install it and run `/reload-plugins`.
-
-## Workspace setup
-
-`glua_ls` reads `.luarc.json` from the project root. Most GMod projects also want the GLua type stubs from [`luttje/glua-api-snippets`](https://github.com/luttje/glua-api-snippets) referenced from `workspace.library`. Example `.luarc.json`:
+`.luarc.json` example:
 
 ```json
 {
@@ -59,16 +32,11 @@ If Claude Code can't find the binary you'll see `Executable not found in $PATH` 
 }
 ```
 
-Then download the latest stubs once:
+## Troubleshooting
 
-```bash
-mkdir -p .tools/glua-api
-url=$(gh api repos/luttje/glua-api-snippets/releases/latest \
-    --jq '.assets[] | select(.name | endswith(".lua.zip")) | .browser_download_url')
-curl -sL -o .tools/glua-api.zip "$url"
-unzip -q -o .tools/glua-api.zip -d .tools/glua-api/
-```
+If `/plugin` Errors tab shows the LSP failing, the skill has the diagnose-first checklist. The two most common causes are: no `.tools/bin/glua_ls` in the workspace (the shim's "no project-local install found" error), or missing GLua API stubs (every GMod global flagged as `undefined-global`).
 
 ## More information
 - [`glua_ls` on GitHub](https://github.com/Pollux12/gmod-glua-ls)
 - [`glua_check` CLI sibling](https://github.com/Pollux12/gmod-glua-ls/releases) — same engine as a one-shot linter
+- [`luttje/glua-api-snippets`](https://github.com/luttje/glua-api-snippets) — type stubs source

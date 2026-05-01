@@ -9,7 +9,7 @@
     {
       "name": "glua-lsp",
       "description": "GLua language server (glua_ls) for Garry's Mod projects — Claude gets diagnostics, hover, jump-to-def for .lua files",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "author": {
         "name": "Amy Jeanes"
       },
