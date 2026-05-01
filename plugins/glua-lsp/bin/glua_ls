@@ -1,0 +1,21 @@
+#!/bin/sh
+# Wrapper that resolves to a project-local glua_ls at <cwd>/.tools/bin/.
+# Place this directory on PATH (instead of any project-specific .tools/bin)
+# so each workspace picks up its own pinned glua_ls.
+
+DIR="$PWD"
+while :; do
+    candidate="$DIR/.tools/bin/glua_ls"
+    if [ -x "$candidate" ]; then
+        exec "$candidate" "$@"
+    fi
+    parent=$(dirname "$DIR")
+    if [ "$parent" = "$DIR" ]; then
+        break
+    fi
+    DIR="$parent"
+done
+
+echo "glua_ls: no project-local install found searching upward from $PWD." >&2
+echo "Run scripts/install-tools.ps1 from your project root to install one." >&2
+exit 127

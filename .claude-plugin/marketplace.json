@@ -17,7 +17,7 @@
       "category": "development",
       "lspServers": {
         "glua": {
-          "command": "glua_ls",
+          "command": "${CLAUDE_PLUGIN_ROOT}/bin/glua_ls.cmd",
           "extensionToLanguage": {
             ".lua": "lua"
           }
