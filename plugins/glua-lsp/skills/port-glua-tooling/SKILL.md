@@ -101,4 +101,4 @@ Pick the closest shape:
 
 - `.tools/` binaries — each repo provisions its own via `install-tools.ps1`.
 - Build/publish jobs — those vary per repo (Workshop upload, combine-into-parent, .NET tests). Only the `GLua Check` job is the standardized piece.
-- `glua_ls` on global PATH — the plugin's shim resolves the project-local binary; never have contributors add a project-specific `.tools/bin` to their permanent PATH.
+- `glua_ls` on global PATH — the plugin's launcher resolves the project-local binary; never have contributors add a project-specific `.tools/bin` to their permanent PATH.

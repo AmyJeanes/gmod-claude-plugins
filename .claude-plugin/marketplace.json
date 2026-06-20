@@ -9,7 +9,7 @@
     {
       "name": "glua-lsp",
       "description": "GLua language server (glua_ls) for Garry's Mod projects — Claude gets diagnostics, hover, jump-to-def for .lua files",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "author": {
         "name": "Amy Jeanes"
       },
@@ -17,7 +17,8 @@
       "category": "development",
       "lspServers": {
         "glua": {
-          "command": "${CLAUDE_PLUGIN_ROOT}/bin/glua_ls.cmd",
+          "command": "node",
+          "args": ["${CLAUDE_PLUGIN_ROOT}/bin/glua_ls.mjs"],
           "extensionToLanguage": {
             ".lua": "lua"
           }
